@@ -1,0 +1,16 @@
+server:
+  host:
+  port:
+db:
+  userName:
+  password:
+  addr:
+  port:
+  database:
+  maxOpenConns:
+  maxIdleConns:
+nosql:
+  network:
+  addr:
+  maxIdle:
+  maxActive:
