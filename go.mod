@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-sql-driver/mysql v1.6.0
+	github.com/gomodule/redigo v1.8.8
 	github.com/lithammer/shortuuid v3.0.0+incompatible
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
