@@ -38,3 +38,4 @@ nosql:
 - [ ] Logging
 - [ ] Rate Limiter
 - [ ] Valid Url
+- [ ] Testing
