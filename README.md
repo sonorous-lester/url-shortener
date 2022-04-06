@@ -37,5 +37,5 @@ nosql:
 ## 待辦清單
 - [ ] Logging
 - [ ] Rate Limiter
-- [ ] Valid Url
+- [ ] Improve valid url mechanism
 - [ ] Testing
