@@ -3,7 +3,6 @@ package delivery
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"net/url"
 	"url-shortener/internal/domain"
 	"url-shortener/internal/exception"
 )
@@ -20,12 +19,13 @@ type shortURL struct {
 
 type Handler struct {
 	shortDomainUrl    string
+	validator         domain.UrlValidator
 	shortenUrlUsecase domain.ShortenUrlUsecase
 	redirectUsecase   domain.RedirectUsecase
 }
 
-func NewDeliverHandler(c *gin.Engine, shortDomainUrl string, shortenUrl domain.ShortenUrlUsecase, redirect domain.RedirectUsecase) {
-	handler := &Handler{shortDomainUrl: shortDomainUrl, shortenUrlUsecase: shortenUrl, redirectUsecase: redirect}
+func NewDeliverHandler(c *gin.Engine, shortDomainUrl string, validator domain.UrlValidator, shortenUrl domain.ShortenUrlUsecase, redirect domain.RedirectUsecase) {
+	handler := &Handler{shortDomainUrl: shortDomainUrl, shortenUrlUsecase: shortenUrl, validator: validator, redirectUsecase: redirect}
 	c.POST("/api/v1/urls", handler.urls)
 	c.GET("/:url_id", handler.redirect)
 }
@@ -38,8 +38,8 @@ func (h *Handler) urls(c *gin.Context) {
 		return
 	}
 
-	_, err = url.ParseRequestURI(originUrl.Url)
-	if err != nil {
+	isValid := h.validator.Valid(originUrl.Url)
+	if !isValid {
 		c.JSON(http.StatusBadRequest, gin.H{"message": exception.URLIsNotValid.Error()})
 		return
 	}

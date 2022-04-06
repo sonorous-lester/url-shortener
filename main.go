@@ -6,6 +6,7 @@ import (
 	"url-shortener/internal/service/config"
 	"url-shortener/internal/service/db"
 	"url-shortener/internal/service/urld"
+	"url-shortener/internal/service/validator"
 	"url-shortener/internal/usecase"
 )
 
@@ -22,7 +23,8 @@ func main() {
 	defer cache.Close()
 
 	router := gin.Default()
-	delivery.NewDeliverHandler(router, cfg.Server.Host, shortenUrlUsecaseImp, redirectUsecaseImp)
+	v := validator.NewUrlValidator()
+	delivery.NewDeliverHandler(router, cfg.Server.Host, v, shortenUrlUsecaseImp, redirectUsecaseImp)
 
 	router.Run(cfg.Server.Port)
 }
