@@ -10,4 +10,5 @@ type Logger interface {
 	Warnf(format string, args ...interface{})
 	Debugf(format string, args ...interface{})
 	Debug(args ...interface{})
+	CloseFile()
 }
