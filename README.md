@@ -35,7 +35,7 @@ nosql:
 - [Yaml](https://github.com/go-yaml/yaml)
 
 ## 待辦清單
-- [ ] Logging
+- [X] Logging
 - [ ] Rate Limiter
-- [ ] Improve valid url mechanism
+- [X] Improve valid url mechanism
 - [ ] Testing
