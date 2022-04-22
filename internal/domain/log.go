@@ -1,6 +1,7 @@
 package domain
 
 type Logger interface {
+	Panicf(format string, args ...interface{})
 	Errorf(format string, args ...interface{})
 	Fatalf(format string, args ...interface{})
 	Fatal(args ...interface{})
