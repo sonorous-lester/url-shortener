@@ -30,12 +30,14 @@ func (s *ShortenUrlUsecase) Process(shortDomainUrl, longUrl, expireAt string) (s
 	err = s.storage.Store(longUrl, urlId, expireAt)
 	if err != nil {
 		s.logger.Debugf("store url error. longUrl: %s, urlId: %s, expireAt: %s", longUrl, urlId, expireAt)
+		s.logger.Errorf("store url error. message: %s", err.Error())
 		return "", "", exception.ServerError
 	}
 
 	err = s.cache.Set(urlId, longUrl, expireTime)
 	if err != nil {
-		s.logger.Debugf("url url error. longUrl: %s, urlId: %s, expireAt: %s", longUrl, urlId, expireAt)
+		s.logger.Debugf("cache url error. longUrl: %s, urlId: %s, expireAt: %s", longUrl, urlId, expireAt)
+		s.logger.Errorf("cache url error. message: %s", err.Error())
 		return "", "", exception.ServerError
 	}
 
