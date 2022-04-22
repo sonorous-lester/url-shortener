@@ -42,7 +42,7 @@ func (noSql NoSql) Get(key string) (string, error) {
 
 	value, err := client.Do("GET", key)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	if value == nil {
 		return "", nil
