@@ -18,13 +18,12 @@ type Sql struct {
 	server *sql.DB
 }
 
-func NewSql(c config.Config) Sql {
+func NewSql(c config.Config) (Sql, error) {
 	fmt.Println(c)
 	conn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", c.Db.UserName, c.Db.Password, c.Db.Addr, c.Db.Port, c.Db.Database)
 	db, err := sql.Open("mysql", conn)
 	if err != nil {
-		fmt.Println("connection to mysql failed:", err)
-		panic(err.Error())
+		return Sql{}, err
 	}
 
 	db.SetConnMaxLifetime(2 * time.Minute)
@@ -34,16 +33,14 @@ func NewSql(c config.Config) Sql {
 	_, err = db.Exec(createTableQuery)
 
 	if err != nil {
-		fmt.Println("create table failed:", err)
-		panic(err.Error())
+		return Sql{}, err
 	}
-	return Sql{server: db}
+	return Sql{server: db}, nil
 }
 
 func (db Sql) Store(longUrl, urlId, expireAt string) error {
 	_, err := db.server.Exec(insertQuery, longUrl, urlId, expireAt)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return nil
