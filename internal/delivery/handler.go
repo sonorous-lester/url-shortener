@@ -22,10 +22,17 @@ type Handler struct {
 	validator         domain.UrlValidator
 	shortenUrlUsecase domain.ShortenUrlUsecase
 	redirectUsecase   domain.RedirectUsecase
+	logger            domain.Logger
 }
 
-func NewDeliverHandler(c *gin.Engine, shortDomainUrl string, validator domain.UrlValidator, shortenUrl domain.ShortenUrlUsecase, redirect domain.RedirectUsecase) {
-	handler := &Handler{shortDomainUrl: shortDomainUrl, shortenUrlUsecase: shortenUrl, validator: validator, redirectUsecase: redirect}
+func NewDeliverHandler(
+	c *gin.Engine,
+	shortDomainUrl string,
+	validator domain.UrlValidator,
+	shortenUrl domain.ShortenUrlUsecase,
+	redirect domain.RedirectUsecase,
+	logger domain.Logger) {
+	handler := &Handler{shortDomainUrl: shortDomainUrl, shortenUrlUsecase: shortenUrl, validator: validator, redirectUsecase: redirect, logger: logger}
 	c.POST("/api/v1/urls", handler.urls)
 	c.GET("/:url_id", handler.redirect)
 }
@@ -34,12 +41,15 @@ func (h *Handler) urls(c *gin.Context) {
 	var originUrl originURL
 	err := c.Bind(&originUrl)
 	if err != nil {
+		raw, _ := c.GetRawData()
+		h.logger.Debugf("convert request body to origin url failure. raw data is: %s", raw)
 		c.JSON(http.StatusBadRequest, gin.H{"message": exception.IncorrectInput.Error()})
 		return
 	}
 
 	isValid := h.validator.Valid(originUrl.Url)
 	if !isValid {
+		h.logger.Warnf("url is not valid. url is: %s", originUrl.Url)
 		c.JSON(http.StatusBadRequest, gin.H{"message": exception.URLIsNotValid.Error()})
 		return
 	}
