@@ -31,7 +31,6 @@ func (noSql NoSql) Set(key, value string, expireTime int) error {
 
 	_, err := client.Do("SETEX", key, expireTime, value)
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 	return nil
@@ -43,7 +42,6 @@ func (noSql NoSql) Get(key string) (string, error) {
 
 	value, err := client.Do("GET", key)
 	if err != nil {
-		fmt.Println(err)
 		return "", nil
 	}
 	if value == nil {
