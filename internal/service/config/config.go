@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"gopkg.in/yaml.v3"
 	"os"
 )
@@ -28,18 +27,17 @@ type Config struct {
 	} `yaml:"nosql"`
 }
 
-func Read() Config {
+func Read() (Config, error) {
 	f, err := os.Open("config.yml")
-	if err != nil {
-		fmt.Println(err)
-	}
 	defer f.Close()
-
+	if err != nil {
+		return Config{}, err
+	}
 	var cfg Config
 	decoder := yaml.NewDecoder(f)
 	err = decoder.Decode(&cfg)
 	if err != nil {
-		fmt.Println(err)
+		return Config{}, err
 	}
-	return cfg
+	return cfg, nil
 }

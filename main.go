@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	cfg := config.Read()
+	cfg, err := config.Read()
 
 	idGenerator := urld.NewGenerator()
 	storage := db.NewSql(cfg)
