@@ -22,3 +22,6 @@ config.yml
 
 # Goland
 .idea/
+
+# Log
+log.txt
